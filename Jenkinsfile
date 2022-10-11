@@ -71,9 +71,9 @@ pipeline {
       steps {
         script {
           sh '''
-            ansible-playbook sources/ansible/playbook_odoo.yml -i dev.yml
-            ansible-playbook sources/ansible/playbook_pgadmin.yml -i dev.yml
-            ansible-playbook sources/ansible/playbook_ic_webapp.yml -i dev.yml 
+            ansible-playbook sources/ansible/playbook_odoo.yml -i sources/ansible/dev.yml
+            ansible-playbook sources/ansible/playbook_pgadmin.yml -i sources/ansible/dev.yml
+            ansible-playbook sources/ansible/playbook_ic_webapp.yml -i sources/ansible/dev.yml 
             '''
             // ansible-playbook playbook_ic_webapp.yml -i dev.yml --vault-password-file vault.key 
         }
@@ -86,9 +86,9 @@ pipeline {
       steps {
         script {
           sh '''
-            ansible-playbook sources/ansible/playbook_odoo.yml -i prod.yml
-            ansible-playbook sources/ansible/playbook_pgadmin.yml -i prod.yml
-            ansible-playbook sources/ansible/playbook_ic_webapp.yml -i prod.yml 
+            ansible-playbook sources/ansible/playbook_odoo.yml -i sources/ansible/prod.yml
+            ansible-playbook sources/ansible/playbook_pgadmin.yml -i sources/ansible/prod.yml
+            ansible-playbook sources/ansible/playbook_ic_webapp.yml -i sources/ansible/prod.yml 
             '''
         }
       }
