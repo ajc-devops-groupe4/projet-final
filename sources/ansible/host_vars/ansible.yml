@@ -1,0 +1,8 @@
+---
+
+ansible_host: "18.218.41.5"
+ansible_port: "22"
+ansible_ssh_private_key_file: "/home/ubuntu/.ssh/new-project.pem"
+ansible_user: "ubuntu"
+ansible_ssh_user: "ubuntu"
+ansible_python_interpreter: "/usr/bin/python3"

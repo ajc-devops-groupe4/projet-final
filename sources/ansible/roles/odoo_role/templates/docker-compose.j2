@@ -1,0 +1,41 @@
+version: "3"
+services:
+  {{ service_web }}:
+    container_name: {{ web_container_name }}
+    image: odoo:13
+    depends_on:
+      - {{ service_db }}
+    ports:
+      - "8069:8069"
+    volumes:
+      - {{ odoo_web_volume }}:/var/lib/odoo
+      - ./config:/etc/odoo
+      - ./addons:/mnt/extra-addons
+    environment:
+      - HOST={{ service_db  }}
+      - PASSWORD={{ pg_password }}
+    networks:
+    - {{ network_name }}
+
+  {{ service_db }}:
+    container_name: {{ db_container_name }}
+    image: postgres:13
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_PASSWORD={{ pg_password }}
+      - POSTGRES_USER=odoo
+      - PGDATA={{ odoo_db_mount }}
+    volumes:
+      - {{ odoo_db_volume }}:{{ odoo_db_mount }}
+    ports:
+      - "5432:5432"
+    networks:
+    - {{ network_name }}
+
+volumes:
+  {{ odoo_web_volume }}:
+  {{ odoo_db_volume }}:
+
+networks:
+  {{ network_name }}:
+    driver: bridge

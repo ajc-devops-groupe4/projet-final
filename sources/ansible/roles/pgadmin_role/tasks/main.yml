@@ -1,0 +1,32 @@
+# tasks file for pgadmin
+
+#  pgadmin & ic_webapp
+
+    - name: Générer le fichier docker-compose.yml
+      vars:
+        service_pgadmin: "{{var_service_pgadmin}}"
+        pgadmin_container_name: "{{var_pgadmin_container_name}}"
+        pgadmin_email: "{{var_pgadmin_email}}"
+        pgadmin_password: "{{var_pgadmin_password}}"
+        pgadmin_volume: "{{var_pgadmin_volume}}"
+      template:
+        src: docker-compose.j2
+        dest: /tmp/docker-compose.yml
+        #owner: ec2-user
+        #group: docker
+        mode: "0777"
+
+    - name: Générer le fichier servers.json
+      vars:
+        postgres_host: "{{var_postgres_host}}"
+      template:
+        src: servers.json.j2
+        dest: /tmp/servers.json
+        #owner: ec2-user
+        #group: docker
+        mode: "0777"
+
+    - name: Use docker-compose
+      docker_compose:
+        project_src: /tmp/
+        state: present

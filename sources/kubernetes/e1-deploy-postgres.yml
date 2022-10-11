@@ -1,0 +1,49 @@
+---
+# Déploiement F du plan
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+  namespace: icgroup
+  labels:
+    app: postgres
+    env: prod
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+      env: prod
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: postgres
+        env: prod
+    spec:
+      containers:
+      - image: postgres:14
+        name: postgres
+        env:
+        - name: PGDATA
+          value: /var/lib/postgresql/data/odoo
+        - name: POSTGRES_USER
+          value: odoo-postgres
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: passwords
+              key: postgres-password
+        - name: POSTGRES_DB
+          value: postgres
+        ports:
+        - containerPort: 5432
+          name: postgres-port
+        volumeMounts:
+        - name: postgres-persistent-storage
+          mountPath: /var/lib/postgresql/data
+      volumes:
+      - name: postgres-persistent-storage
+        persistentVolumeClaim:
+          claimName: postgres-pv-claim

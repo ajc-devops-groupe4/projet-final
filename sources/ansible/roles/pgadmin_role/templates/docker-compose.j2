@@ -1,0 +1,18 @@
+version: "3"
+services:
+  {{ service_pgadmin }}:
+    container_name: {{ pgadmin_container_name }}
+    image: dpage/pgadmin4:6.14
+    environment:
+      PGADMIN_DEFAULT_EMAIL: {{ pgadmin_email }}
+      PGADMIN_DEFAULT_PASSWORD: {{ pgadmin_password }}
+      PGADMIN_LISTEN_ADDRESS: 0.0.0.0
+    ports:
+      - "8070:80"
+    volumes:
+      - ./servers.json:/pgadmin4/servers.json
+      - {{ pgadmin_volume }}:/var/lib/pgadmin
+    restart: always
+
+volumes:
+  {{ pgadmin_volume }}:

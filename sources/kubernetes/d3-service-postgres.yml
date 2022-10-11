@@ -1,0 +1,19 @@
+---
+# Service E du plan
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  namespace: icgroup
+  labels:
+    app: postgres
+    env: prod
+spec:
+  ports:
+    - port: 5432
+      protocol: TCP
+      targetPort: 5432
+  selector:
+    app: postgres
+    env: prod
+  type: ClusterIP

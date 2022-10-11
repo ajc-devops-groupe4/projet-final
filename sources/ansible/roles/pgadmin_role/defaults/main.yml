@@ -1,0 +1,9 @@
+---
+# defaults file for pgadmin_role
+
+var_service_pgadmin: pgadmin
+var_pgadmin_container_name: pgadmin-container
+var_pgadmin_email: admin@admin.com
+var_pgadmin_password: 1234
+var_pgadmin_volume: pgadmin-volume
+var_postgres_host: 192.168.99.11

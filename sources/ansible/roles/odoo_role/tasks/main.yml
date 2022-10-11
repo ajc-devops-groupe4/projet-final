@@ -1,0 +1,27 @@
+---
+# tasks file for odoo_role
+
+#  Odoo & Postgresql
+
+    - name: Générer le fichier docker-compose.yml
+      vars:
+        service_web: "{{ var_service_web }}"
+        web_container_name: "{{ var_web_container_name }}"
+        service_db: "{{ var_service_db }}"
+        odoo_web_volume: "{{ var_odoo_web_volume }}"
+        network_name: "{{ var_network_name }}"
+        db_container_name: "{{ var_db_container_name }}"
+        odoo_db_mount: "{{ var_odoo_db_mount }}"
+        odoo_db_volume: "{{ var_odoo_db_volume }}"
+        pg_password: "{{ var_pg_password }}"
+      template:
+        src: docker-compose.j2
+        dest: /tmp/docker-compose.yml
+        owner: ubuntu
+        group: docker
+        mode: "0777"
+
+    - name: Use docker-compose
+      community.docker.docker_compose:
+        project_src: /tmp/
+        state: present

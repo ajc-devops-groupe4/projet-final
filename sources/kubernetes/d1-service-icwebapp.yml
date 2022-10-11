@@ -1,0 +1,19 @@
+---
+# Service A du plan
+apiVersion: v1
+kind: Service
+metadata:
+  name: ic-webapp
+  namespace: icgroup
+  labels:
+    app: ic-webapp
+    env: prod
+spec:
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  selector:
+    app: ic-webapp
+    env: prod
+  type: LoadBalancer

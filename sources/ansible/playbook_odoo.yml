@@ -1,0 +1,10 @@
+---
+
+  - hosts: client1
+    become: true
+    #vars_files:
+    #  - files/default.yml
+    #  - files/secrets/credentials.yml
+  
+    roles:
+      - role: odoo_role

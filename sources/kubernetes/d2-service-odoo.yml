@@ -1,0 +1,19 @@
+---
+# Service C du plan
+apiVersion: v1
+kind: Service
+metadata:
+  name: odoo
+  namespace: icgroup
+  labels:
+    app: odoo
+    env: prod
+spec:
+  ports:
+    - protocol: TCP
+      port: 8069
+      targetPort: 8069
+  selector:
+    app: odoo
+    env: prod
+  type: LoadBalancer

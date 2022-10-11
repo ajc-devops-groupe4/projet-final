@@ -1,0 +1,32 @@
+---
+
+# Role install docker
+
+    - name: Install docker & docker for python
+      apt:
+        name: docker.io,python3-docker,pip
+        state: present
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: Install docker-compose
+      get_url:
+        url: https://github.com/docker/compose/releases/download/1.29.2/docker-compose-Linux-x86_64
+        dest: /usr/bin/docker-compose
+        mode: 0755
+
+    - name: Install module python package
+      ansible.builtin.pip:
+        name: docker,docker-compose
+
+    - name: start docker
+      systemd:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: add current user to group docker
+      user:
+        name: "ubuntu"
+        groups: docker
+        append: yes

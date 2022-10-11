@@ -1,0 +1,11 @@
+---
+# tasks file for ic_webapp_role
+
+    - name: Deployment ic_webapp from Docker Hub
+      docker_container:
+        image: fredlab/ic-webapp:{{version}}
+        name: ic_webapp
+        state: started
+        auto_remove: true
+        ports:
+          - "80:8080"

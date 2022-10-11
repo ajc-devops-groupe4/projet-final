@@ -1,0 +1,23 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pgadmin-servers-cfgmap
+  namespace: icgroup
+data:
+  # Fichier servers.json qui sera monté comme volume dans les pods pgadmin
+  pgadmin-servers-file: |
+    {
+      "Servers": {
+        "1": {
+          "Name": "PostgreSQL server",
+          "Group": "Servers",
+          "Port": 5432,
+          "Username": "odoo-postgres",
+          "Host": "postgres",
+          "PassFile": "../../pgpass",
+          "SSLMode": "prefer",
+          "MaintenanceDB": "postgres"
+        }
+      }
+    }

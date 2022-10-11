@@ -1,0 +1,112 @@
+pipeline {
+  agent any
+  environment {
+    ID_DOCKER = "fredlab"
+    IMAGE_NAME = "ic-webapp"
+    PORT_EXPOSED = "80"
+    ODOO = "${sh(script:'awk \'/ODOO/ {sub(/^.**URL/,\"\");print $2}\' releases.txt', returnStdout: true).trim()}"
+    PGADMIN = "${sh(script:'awk \'/PGADMIN/ {sub(/^.**URL/,\"\");print $2}\' releases.txt', returnStdout: true).trim()}"
+    VER = "${sh(script:'awk \'/version:/ {sub(/^.**version:/,\"\");print $1}\' releases.txt', returnStdout: true).trim()}"
+  }
+  stages {
+    stage('Build ic-webapp image') {
+      steps {
+        script {
+          sh '''
+            docker build --build-arg odoo=${ODOO} --build-arg pgadmin=${PGADMIN} -t ${ID_DOCKER}/${IMAGE_NAME}:${VER} .             
+            '''
+        }
+      }
+    }
+    stage('Run container based on builded image') {
+      steps {
+        script {
+          sh '''
+            echo "Clean Environment"
+            docker rm -f $IMAGE_NAME || echo "container does not exist"
+            docker run --name $IMAGE_NAME -d -p ${PORT_EXPOSED}:8080 ${ID_DOCKER}/$IMAGE_NAME:$VER
+            sleep 5
+             '''
+        }
+      }
+    }
+    stage('Test image') {
+      steps {
+        script {
+          sh '''
+            curl http://192.168.56.8:${PORT_EXPOSED} | grep -q "les titres de la page"
+             '''
+        }
+      }
+    }
+    stage('Clean Container') {
+      agent any
+      steps {
+        script {
+          sh '''
+            docker stop $IMAGE_NAME
+            docker rm $IMAGE_NAME
+             '''
+        }
+      }
+    }
+    stage ('Login and Push Image on docker hub') {
+      agent any
+      environment {
+        DOCKERHUB_PASSWORD  = credentials('dockerhub')
+      }            
+      steps {
+        script {
+          sh '''
+            echo $DOCKERHUB_PASSWORD_PSW | docker login -u $ID_DOCKER --password-stdin
+            docker push ${ID_DOCKER}/$IMAGE_NAME:$VER
+             '''
+        }
+      }
+    }    
+    stage('Push image in staging and deploy it') {
+      when {
+        expression { GIT_BRANCH == 'origin/staging' }
+      }
+      steps {
+        script {
+          sh '''
+            ansible-playbook playbook.yml --vault-password-file vault.key -l host1,host2
+            '''
+        }
+      }
+    }
+    stage('Push image in production and deploy it') {
+      when {
+        expression { GIT_BRANCH == 'origin/master' }
+      }
+      steps {
+        script {
+          sh '''
+            ansible-playbook playbook.yml --vault-password-file vault.key -l host1,host2
+            '''
+        }
+      }
+    }
+  }
+//   post {
+//     success {
+//       slackSend (
+//         botUser: true,
+//         color: '#00FF00', 
+//         message: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})", 
+//         tokenCredentialId: 'slack-token', 
+//         channel: 'jenkins'
+//       )
+//     }
+//     failure {
+//       slackSend (
+//         botUser: true,
+//         color: '#FF0000', 
+//         message: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})",
+//         tokenCredentialId: 'slack-token', 
+//         channel: 'jenkins'
+//       )
+//     }   
+//   }
+}

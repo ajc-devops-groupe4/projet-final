@@ -1,0 +1,84 @@
+---
+# Déploiement H du plan
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pgadmin
+  namespace: icgroup
+  labels:
+    app: pgadmin
+    env: prod
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pgadmin
+      env: prod
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: pgadmin
+        env: prod
+    spec:
+      # Nécessité de changer l'owner du dossier /pgadmin
+      # Comme il est monté par kubernetes, il appartient à root
+      # Il faut donc lui donner pgadmin comme owner
+      initContainers:
+      - name: change-folder-owner
+        image: busybox
+        command: ["sh", "-c", "chown -R 5050:0 /var/lib/pgadmin"]
+        volumeMounts:
+        - name: pgadmin-persistent-storage
+          mountPath: /var/lib/pgadmin
+      containers:
+      - image: dpage/pgadmin4:6.14
+        name: pgadmin
+        securityContext:
+          runAsUser: 5050
+        env:
+        - name: PGADMIN_DEFAULT_EMAIL
+          value: admin@admin.com
+        - name: PGADMIN_DEFAULT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: passwords
+              key: pgadmin-password
+        - name: PGADMIN_LISTEN_ADDRESS
+          value: 0.0.0.0
+        ports:
+        - containerPort: 80
+          name: pgadmin-port
+        volumeMounts:
+        - name: pgadmin-persistent-storage
+          mountPath: /var/lib/pgadmin
+        # Le fichier servers.json généré par le ConfigMap :
+        - name: pgadmin-servers
+          mountPath: /pgadmin4/servers.json
+          subPath: pgadmin-servers-file
+        # Le fichier pgpass généré par les Secrets :
+        - name: pgadmin-passfile
+          mountPath: /pgadmin4/pgpass
+          subPath: pgpass
+          readOnly: true
+        # Ce fichier doit avoir 0600 comme droits d'accès, mais est monté en lecture seule
+        # Donc on le copie au bon endroit, on le donne a pgadmin, et on change ses droits :
+        command:
+          - "sh"
+          - "-c"
+          - |
+            cp -f /pgadmin4/pgpass /var/lib/pgadmin/
+            chown 5050:0 /var/lib/pgadmin/pgpass
+            chmod 0600 /var/lib/pgadmin/pgpass
+            /entrypoint.sh
+      volumes:
+      - name: pgadmin-persistent-storage
+        persistentVolumeClaim:
+          claimName: pga-pv-claim
+      - name: pgadmin-servers
+        configMap:
+          name: pgadmin-servers-cfgmap
+      - name: pgadmin-passfile
+        secret:
+          secretName: passfile

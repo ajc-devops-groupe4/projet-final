@@ -1,0 +1,36 @@
+---
+# Déploiement B du plan
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ic-webapp
+  namespace: icgroup
+  labels:
+    app: ic-webapp
+    env: prod
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ic-webapp
+      env: prod
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: ic-webapp
+        env: prod
+    spec:
+      containers:
+      - image: fredlab/ic-webapp:1.0
+        name: ic-webapp
+        env:
+        # Les URLs exposées par les LoadBalancer de MetalLB :
+        - name: ODOO_URL
+          value: http://odoo.ajc:8069
+        - name: PGADMIN_URL
+          value: http://pgadmin.ajc:8070
+        ports:
+        - containerPort: 8080
+          name: ic-webapp-port

@@ -1,0 +1,13 @@
+---
+# defaults file for odoo_role
+
+var_service_web: "odoo"
+var_web_container_name: "odoo-web"
+var_service_db: "db"
+var_odoo_web_volume: "odoo-volume"
+var_network_name: "odoo-network"
+var_db_container_name: "bdd-odoo"
+var_odoo_db_mount: "/var/lib/postgresql/data/pgdata"
+var_odoo_db_volume: "psql-volume"
+var_pg_password: "password1234"
+
