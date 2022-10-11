@@ -13,7 +13,7 @@ pipeline {
       steps {
         script {
           sh '''
-            docker build --build-arg odoo=${ODOO} --build-arg pgadmin=${PGADMIN} -t ${ID_DOCKER}/${IMAGE_NAME}:${VER} .             
+            docker build -f sources/docker/Dockerfile --build-arg odoo=${ODOO} --build-arg pgadmin=${PGADMIN} -t ${ID_DOCKER}/${IMAGE_NAME}:${VER} sources/docker             
             '''
         }
       }
@@ -34,7 +34,7 @@ pipeline {
       steps {
         script {
           sh '''
-            curl http://192.168.56.8:${PORT_EXPOSED} | grep -q "les titres de la page"
+            curl ${PGADMIN}:${PORT_EXPOSED} | grep -q "les titres de la page"
              '''
         }
       }
@@ -64,26 +64,31 @@ pipeline {
         }
       }
     }    
-    stage('Push image in staging and deploy it') {
+    stage('Push images in staging and deploy it') {
       when {
         expression { GIT_BRANCH == 'origin/staging' }
       }
       steps {
         script {
           sh '''
-            ansible-playbook playbook.yml --vault-password-file vault.key -l host1,host2
+            ansible-playbook sources/ansible/playbook_odoo.yml -i dev.yml
+            ansible-playbook sources/ansible/playbook_pgadmin.yml -i dev.yml
+            ansible-playbook sources/ansible/playbook_ic_webapp.yml -i dev.yml 
             '''
+            // ansible-playbook playbook_ic_webapp.yml -i dev.yml --vault-password-file vault.key 
         }
       }
     }
-    stage('Push image in production and deploy it') {
+    stage('Push images in production and deploy it') {
       when {
         expression { GIT_BRANCH == 'origin/master' }
       }
       steps {
         script {
           sh '''
-            ansible-playbook playbook.yml --vault-password-file vault.key -l host1,host2
+            ansible-playbook sources/ansible/playbook_odoo.yml -i prod.yml
+            ansible-playbook sources/ansible/playbook_pgadmin.yml -i prod.yml
+            ansible-playbook sources/ansible/playbook_ic_webapp.yml -i prod.yml 
             '''
         }
       }
