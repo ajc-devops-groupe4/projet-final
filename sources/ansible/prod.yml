@@ -1,5 +1,5 @@
 ---
-# hosts.yaml
+# prod.yaml
 
 all:
   children:
