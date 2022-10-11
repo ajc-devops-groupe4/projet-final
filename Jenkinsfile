@@ -86,7 +86,7 @@ pipeline {
       steps {
         script {
           sh '''
-            ansible-playbook sources/ansible/playbook_odoo.yml -i sources/ansible/prod.yml
+            ansible-playbook sources/ansible/playbook_odoo.yml -i sources/ansible/prod.yml -vvvv
             ansible-playbook sources/ansible/playbook_pgadmin.yml -i sources/ansible/prod.yml
             ansible-playbook sources/ansible/playbook_ic_webapp.yml -i sources/ansible/prod.yml 
             '''
