@@ -27,6 +27,6 @@
 
     - name: add current user to group docker
       user:
-        name: "ubuntu"
+        name: "{{user}}"
         groups: docker
         append: yes

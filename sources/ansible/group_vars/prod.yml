@@ -1,7 +1,9 @@
 ---
 
-ansible_ssh_private_key_file: "/home/ubuntu/.ssh/new-project.pem"
-ansible_user: "ubuntu"
-ansible_ssh_user: "ubuntu"
+ansible_ssh_private_key_file: "/home/geds/.ssh/ansible"
+ansible_user: "geds"
+ansible_ssh_user: "geds"
+ansible_become_user: "geds"
+ansible_become_pass: "geds"
 ansible_python_interpreter: "/usr/bin/python3"
 

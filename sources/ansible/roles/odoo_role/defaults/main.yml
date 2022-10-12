@@ -11,3 +11,4 @@ var_odoo_db_mount: "/var/lib/postgresql/data/pgdata"
 var_odoo_db_volume: "psql-volume"
 var_pg_password: "password1234"
 
+user: "geds"

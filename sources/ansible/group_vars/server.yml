@@ -1,8 +1,7 @@
 ---
 
-ansible_host: "192.168.30.1"
-ansible_port: "22"
 ansible_ssh_private_key_file: "/home/geds/.ssh/ansible"
 ansible_user: "geds"
 ansible_ssh_user: "geds"
 ansible_python_interpreter: "/usr/bin/python3"
+

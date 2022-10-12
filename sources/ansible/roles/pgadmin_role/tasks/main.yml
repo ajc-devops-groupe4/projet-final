@@ -11,7 +11,7 @@
         pgadmin_volume: "{{var_pgadmin_volume}}"
       template:
         src: docker-compose.j2
-        dest: /tmp/docker-compose.yml
+        dest: ./docker-compose.yml
         #owner: ec2-user
         #group: docker
         mode: "0777"
@@ -21,12 +21,12 @@
         postgres_host: "{{var_postgres_host}}"
       template:
         src: servers.json.j2
-        dest: /tmp/servers.json
+        dest: ./servers.json
         #owner: ec2-user
         #group: docker
         mode: "0777"
 
     - name: Use docker-compose
       docker_compose:
-        project_src: /tmp/
+        project_src: .
         state: present
