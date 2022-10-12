@@ -13,7 +13,7 @@ pipeline {
       steps {
         script {
           sh '''
-            docker build -f sources/docker/Dockerfile --build-arg odoo="${ODOO}:8069" --build-arg pgadmin="${PGADMIN}:8070" -t ${ID_DOCKER}/${IMAGE_NAME}:${VER} sources/docker             
+            docker build --no-cache -f sources/docker/Dockerfile --build-arg odoo="${ODOO}:8069" --build-arg pgadmin="${PGADMIN}:8070" -t ${ID_DOCKER}/${IMAGE_NAME}:${VER} sources/docker             
             '''
         }
       }
