@@ -13,7 +13,7 @@ pipeline {
       steps {
         script {
           sh '''
-            docker build -f sources/docker/Dockerfile --build-arg odoo=${ODOO} --build-arg pgadmin=${PGADMIN} -t ${ID_DOCKER}/${IMAGE_NAME}:${VER} sources/docker             
+            docker build -f sources/docker/Dockerfile --build-arg odoo="${ODOO}:8069" --build-arg pgadmin="${PGADMIN}:8070" -t ${ID_DOCKER}/${IMAGE_NAME}:${VER} sources/docker             
             '''
         }
       }
@@ -75,8 +75,9 @@ pipeline {
       steps {
         script {
           sh '''
+            rm -f vault-key id_rsa
             cp $PRIVATE_KEY id_rsa
-            echo $VAULT_KEY > vault-key
+            cp $VAULT_KEY vault-key
             chmod 400 id_rsa vault-key
             ansible-playbook sources/ansible/playbook_odoo.yml -i sources/ansible/dev.yml -e version=$VER --vault-password-file vault-key
             ansible-playbook sources/ansible/playbook_pgadmin.yml -i sources/ansible/dev.yml -e version=$VER --vault-password-file vault-key

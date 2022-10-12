@@ -1,2 +1,2 @@
 ---
-ansible_host: "192.168.30.3"
+ansible_host: "ansible-client-2.web-connectivity.fr"
