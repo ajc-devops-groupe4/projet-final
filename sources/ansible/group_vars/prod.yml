@@ -1,6 +1,4 @@
 ---
-
-ansible_ssh_private_key_file: "/home/geds/.ssh/ansible"
 ansible_user: "geds"
 ansible_ssh_user: "geds"
 ansible_become_user: "geds"

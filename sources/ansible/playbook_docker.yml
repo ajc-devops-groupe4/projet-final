@@ -1,10 +1,9 @@
 ---
+- hosts: prod
+  become: true
+  #vars_files:
+  #  - files/default.yml
+  #  - files/secrets/credentials.yml
 
-  - hosts: prod
-    become: true
-    #vars_files:
-    #  - files/default.yml
-    #  - files/secrets/credentials.yml
-
-    roles:
-      - role: docker_role
+  roles:
+    - role: docker_role

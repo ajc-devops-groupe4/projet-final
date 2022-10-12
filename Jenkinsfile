@@ -68,9 +68,14 @@ pipeline {
       when {
         expression { GIT_BRANCH == 'origin/staging' }
       }
+      environment {
+        PRIVATE_KEY = credentials('private-key-ansible')
+      }
       steps {
         script {
           sh '''
+            cp $PRIVATE_KEY sources/ansible/id_rsa
+            chmod 400 id_rsa
             ansible-playbook sources/ansible/playbook_odoo.yml -i sources/ansible/dev.yml
             ansible-playbook sources/ansible/playbook_pgadmin.yml -i sources/ansible/dev.yml
             ansible-playbook sources/ansible/playbook_ic_webapp.yml -i sources/ansible/dev.yml 
@@ -83,9 +88,14 @@ pipeline {
       when {
         expression { GIT_BRANCH == 'origin/master' }
       }
+      environment {
+        PRIVATE_KEY = credentials('private-key-ansible')
+      }
       steps {
         script {
           sh '''
+            cp $PRIVATE_KEY sources/ansible/id_rsa
+            chmod 400 id_rsa
             ansible-playbook sources/ansible/playbook_odoo.yml -i sources/ansible/prod.yml -vvvv
             ansible-playbook sources/ansible/playbook_pgadmin.yml -i sources/ansible/prod.yml
             ansible-playbook sources/ansible/playbook_ic_webapp.yml -i sources/ansible/prod.yml 
