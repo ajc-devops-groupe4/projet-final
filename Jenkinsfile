@@ -97,8 +97,9 @@ pipeline {
       steps {
         script {
           sh '''
+            rm -f vault-key id_rsa
             cp $PRIVATE_KEY id_rsa
-            echo $VAULT_KEY 
+            cp $VAULT_KEY vault-key
             chmod 400 id_rsa vault-key
             ansible-playbook sources/ansible/playbook_odoo.yml -i sources/ansible/prod.yml -e version=$VER --vault-password-file vault-key
             ansible-playbook sources/ansible/playbook_pgadmin.yml -i sources/ansible/prod.yml -e version=$VER --vault-password-file vault-key
