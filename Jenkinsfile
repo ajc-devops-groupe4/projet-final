@@ -70,15 +70,17 @@ pipeline {
       }
       environment {
         PRIVATE_KEY = credentials('private-key-ansible')
+        VAULT_KEY = credentials('vault-key')
       }
       steps {
         script {
           sh '''
             cp $PRIVATE_KEY id_rsa
-            chmod 400 id_rsa
-            ansible-playbook sources/ansible/playbook_odoo.yml -i sources/ansible/dev.yml
-            ansible-playbook sources/ansible/playbook_pgadmin.yml -i sources/ansible/dev.yml
-            ansible-playbook sources/ansible/playbook_ic_webapp.yml -i sources/ansible/dev.yml 
+            echo $VAULT_KEY > vault-key
+            chmod 400 id_rsa vault-key
+            ansible-playbook sources/ansible/playbook_odoo.yml -i sources/ansible/dev.yml -e version=$VER --vault-password-file vault-key
+            ansible-playbook sources/ansible/playbook_pgadmin.yml -i sources/ansible/dev.yml -e version=$VER --vault-password-file vault-key
+            ansible-playbook sources/ansible/playbook_ic_webapp.yml -i sources/ansible/dev.yml -e version=$VER --vault-password-file vault-key
             '''
             // ansible-playbook playbook_ic_webapp.yml -i dev.yml --vault-password-file vault.key 
         }
@@ -90,15 +92,17 @@ pipeline {
       }
       environment {
         PRIVATE_KEY = credentials('private-key-ansible')
+        VAULT_KEY = credentials('vault-key')
       }
       steps {
         script {
           sh '''
             cp $PRIVATE_KEY id_rsa
-            chmod 400 id_rsa
-            ansible-playbook sources/ansible/playbook_odoo.yml -i sources/ansible/prod.yml -vvvv
-            ansible-playbook sources/ansible/playbook_pgadmin.yml -i sources/ansible/prod.yml
-            ansible-playbook sources/ansible/playbook_ic_webapp.yml -i sources/ansible/prod.yml 
+            echo $VAULT_KEY > vault-key
+            chmod 400 id_rsa vault-key
+            ansible-playbook sources/ansible/playbook_odoo.yml -i sources/ansible/prod.yml -e version=$VER --vault-password-file vault-key
+            ansible-playbook sources/ansible/playbook_pgadmin.yml -i sources/ansible/prod.yml -e version=$VER --vault-password-file vault-key
+            ansible-playbook sources/ansible/playbook_ic_webapp.yml -i sources/ansible/prod.yml -e version=$VER --vault-password-file vault-key
             '''
         }
       }

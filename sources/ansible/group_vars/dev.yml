@@ -2,6 +2,5 @@
 ansible_user: "geds"
 ansible_ssh_user: "geds"
 ansible_become_user: "geds"
-ansible_become_pass: "geds"
 ansible_python_interpreter: "/usr/bin/python3"
 

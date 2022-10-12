@@ -2,9 +2,8 @@
 - name: "Deployment ic_webapp & pgAdmin on AWS"
   hosts: client2
   become: true
-  #vars_files:
-  #  - files/default.yml
-  #  - files/secrets/credentials.yml
+  vars_files:
+    - files/secrets/credentials.yml
 
   roles:
     - role: ic_webapp_role

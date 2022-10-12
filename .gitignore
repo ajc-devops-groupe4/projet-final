@@ -1,0 +1,3 @@
+sources/docker-compose/pgadmin/.env
+sources/kubernetes/secret/
+sources/docker-compose/odoo-postgres/odoo_pg_pass
