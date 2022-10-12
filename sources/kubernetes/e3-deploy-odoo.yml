@@ -60,14 +60,6 @@ spec:
         volumeMounts:
         - name: odoo-persistent-storage
           mountPath: /var/lib/odoo
-        # Ici, on crée une nouvelle base de données odoo-db
-        # avec toutes les infos nécessaires, pour éviter d'avoir la page de configuration d'odoo :
-        command:
-          - "sh"
-          - "-c"
-          - |
-            curl "192.168.56.101:8069/web/database/create" --data "master_pwd=123456&name=odoo-db&login=$(ODOO_ACCOUNT)&password=$(ODOO_PASSWORD)&phone=457858&lang=en_US&country_code=us&demo=1" --compressed
-            /entrypoint.sh odoo
       volumes:
       - name: odoo-persistent-storage
         persistentVolumeClaim:

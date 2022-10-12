@@ -57,21 +57,6 @@ spec:
         - name: pgadmin-servers
           mountPath: /pgadmin4/servers.json
           subPath: pgadmin-servers-file
-        # Le fichier pgpass généré par les Secrets :
-        - name: pgadmin-passfile
-          mountPath: /pgadmin4/pgpass
-          subPath: pgpass
-          readOnly: true
-        # Ce fichier doit avoir 0600 comme droits d'accès, mais est monté en lecture seule
-        # Donc on le copie au bon endroit, on le donne a pgadmin, et on change ses droits :
-        command:
-          - "sh"
-          - "-c"
-          - |
-            cp -f /pgadmin4/pgpass /var/lib/pgadmin/
-            chown 5050:0 /var/lib/pgadmin/pgpass
-            chmod 0600 /var/lib/pgadmin/pgpass
-            /entrypoint.sh
       volumes:
       - name: pgadmin-persistent-storage
         persistentVolumeClaim:
@@ -79,6 +64,3 @@ spec:
       - name: pgadmin-servers
         configMap:
           name: pgadmin-servers-cfgmap
-      - name: pgadmin-passfile
-        secret:
-          secretName: passfile
