@@ -83,7 +83,9 @@ pipeline {
             ansible-playbook sources/ansible/playbook_pgadmin.yml -i sources/ansible/dev.yml -e version=$VER --vault-password-file vault-key
             ansible-playbook sources/ansible/playbook_ic_webapp.yml -i sources/ansible/dev.yml -e version=$VER --vault-password-file vault-key
             '''
-            // ansible-playbook playbook_ic_webapp.yml -i dev.yml --vault-password-file vault.key 
+          timeout(time: 60, unit: "MINUTES") {
+            input message: "L'appli est-elle fonctionnelle ?", ok: 'Yes'
+          } 
         }
       }
     }
