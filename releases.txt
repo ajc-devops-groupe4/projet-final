@@ -1,3 +1,3 @@
 ODOO_URL: http://ansible-client-1.web-connectivity.fr
 PGADMIN_URL: http://ansible-client-2.web-connectivity.fr
-version: 1.5
+version: 1.6
