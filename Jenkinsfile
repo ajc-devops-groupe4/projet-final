@@ -34,7 +34,7 @@ pipeline {
       steps {
         script {
           sh '''
-            curl ${PGADMIN}:${PORT_EXPOSED} | grep -q "les titres de la page"
+            curl 127.0.0.1:${PORT_EXPOSED} | grep -q "les titres de la page"
              '''
         }
       }
