@@ -117,7 +117,7 @@ pipeline {
       slackSend (
         botUser: true,
         color: '#00FF00', 
-        message: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})", 
+        message: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL}) - $VER", 
         tokenCredentialId: 'slack-jenkins', 
         channel: 'jenkins'
       )
@@ -126,7 +126,7 @@ pipeline {
       slackSend (
         botUser: true,
         color: '#FF0000', 
-        message: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})",
+        message: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL}) - $VER",
         tokenCredentialId: 'slack-jenkins', 
         channel: 'jenkins'
       )
