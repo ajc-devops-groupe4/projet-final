@@ -2,8 +2,6 @@ Projet de fin de formation AJC - DevOps
 =========
 # Groupe 4
 
-[![Build Status](http://docker-jenkins.web-connectivity.fr:8080/buildStatus/icon?job=final-projet)](http://docker-jenkins.web-connectivity.fr:8080/job/final-projet/)
-
 Projet de déploiement d'une application n-tiers composée de 4 microservices.
 Enoncé du projet dans le .pdf
 
